@@ -31,6 +31,10 @@ import { useForm } from "react-hook-form";
 import { z } from "zod";
 import Link from "next/link";
 import { toast } from "sonner";
+import { signInEmail } from "../../../server/authentication";
+import { useRouter } from "next/navigation";
+import { useState } from "react";
+import { Spinner } from "../ui/spinner";
 
 const formSchema = z.object({
   email: z.email("Email tidak valid").min(1, "Email wajib diisi"),
@@ -41,6 +45,8 @@ export function LoginForm({
   className,
   ...props
 }: React.ComponentProps<"div">) {
+  const [isLoading, setIsLoading] = useState(false);
+  const router = useRouter();
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
     defaultValues: {
@@ -50,10 +56,20 @@ export function LoginForm({
   });
 
   // 2. Define a submit handler.
-  function onSubmit(values: z.infer<typeof formSchema>) {
-    // Do something with the form values.
-    // ✅ This will be type-safe and validated.
-    console.log(values);
+  async function onSubmit(values: z.infer<typeof formSchema>) {
+    try {
+      setIsLoading(true);
+      const result = await signInEmail(values.email, values.password);
+      if (result?.success) {
+        toast.success(result.message);
+        router.push("/dashboard");
+      }
+    } catch (error) {
+      const err = error as Error;
+      toast.error(err?.message || "Sign in email failed");
+    } finally {
+      setIsLoading(false);
+    }
   }
 
   return (
@@ -104,7 +120,7 @@ export function LoginForm({
                     <FormItem>
                       <FormLabel>Email</FormLabel>
                       <FormControl>
-                        <Input placeholder="shadcn" {...field} />
+                        <Input placeholder="Masukkan email" {...field} />
                       </FormControl>
                       <FormDescription>
                         Masukkan email yang terdaftar.
@@ -121,7 +137,7 @@ export function LoginForm({
                       <FormLabel>Password</FormLabel>
                       <FormControl>
                         <Input
-                          placeholder="shadcn"
+                          placeholder="Masukkan password"
                           {...field}
                           type="password"
                         />
@@ -135,7 +151,9 @@ export function LoginForm({
                 />
 
                 <Field>
-                  <Button type="submit">Login</Button>
+                  <Button type="submit" disabled={isLoading}>
+                    {isLoading ? <Spinner /> : "Login"}
+                  </Button>
                   <FieldDescription className="text-center">
                     Don&apos;t have an account?{" "}
                     <Link href="/signup">Sign up</Link>

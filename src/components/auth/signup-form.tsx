@@ -28,7 +28,6 @@ import { useRouter } from "next/navigation";
 import { useState } from "react";
 import { Spinner } from "../ui/spinner";
 import { toast } from "sonner";
-import { IconBrandGoogle } from "@tabler/icons-react";
 
 const formSchema = z
   .object({
@@ -55,16 +54,22 @@ export function SignupForm({ ...props }: React.ComponentProps<typeof Card>) {
     },
   });
   async function onSubmit(values: z.infer<typeof formSchema>) {
-    setIsLoading(true);
-    const result = await signUpEmail(
-      values.name,
-      values.email,
-      values.password
-    );
-    if (result?.success) {
-      form.reset();
-      toast.success(result.message);
-      router.push("/signin");
+    try {
+      setIsLoading(true);
+      const result = await signUpEmail(
+        values.name,
+        values.email,
+        values.password
+      );
+      if (result?.success) {
+        form.reset();
+        toast.success(result.message);
+        router.push("/signin");
+      }
+    } catch (error) {
+      const err = error as Error;
+      toast.error(err?.message || "Sign up email failed");
+    } finally {
       setIsLoading(false);
     }
   }
