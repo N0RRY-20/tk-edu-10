@@ -27,6 +27,8 @@ import {
 
 import { authClient } from "@/lib/auth-client";
 import { useRouter } from "next/navigation";
+import { useState } from "react";
+import { Spinner } from "./ui/spinner";
 
 export function NavUser({
   user,
@@ -39,6 +41,7 @@ export function NavUser({
 }) {
   const { isMobile } = useSidebar();
   const router = useRouter();
+  const [isLoading, setIsLoading] = useState(false);
   return (
     <SidebarMenu>
       <SidebarMenuItem>
@@ -98,7 +101,9 @@ export function NavUser({
             </DropdownMenuGroup>
             <DropdownMenuSeparator />
             <DropdownMenuItem
+              disabled={isLoading}
               onClick={async () => {
+                setIsLoading(true);
                 await authClient.signOut({
                   fetchOptions: {
                     onSuccess: () => {
@@ -108,7 +113,11 @@ export function NavUser({
                 });
               }}
             >
-              <IconLogout />
+              {isLoading ? (
+                <Spinner className="mr-2 h-4 w-4" />
+              ) : (
+                <IconLogout />
+              )}
               Log out
             </DropdownMenuItem>
           </DropdownMenuContent>
