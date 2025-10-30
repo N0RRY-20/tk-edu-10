@@ -9,7 +9,7 @@ export default function SigninPage() {
           <div className="bg-primary text-primary-foreground flex size-6 items-center justify-center rounded-md">
             <School className="size-4" />
           </div>
-          {process.env.NAMA_TK}
+          {process.env.NEXT_PUBLIC_NAMA_TK}
         </a>
         <LoginForm />
       </div>

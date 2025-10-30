@@ -35,9 +35,9 @@ export default function RootLayout({
           enableSystem
           disableTransitionOnChange
         >
-          <div className="fixed top-4 right-4 z-50">
+          {/* <div className="fixed top-4 right-4 z-50">
             <ModeToggle />
-          </div>
+          </div> */}
           {children}
         </ThemeProvider>
       </body>
