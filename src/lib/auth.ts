@@ -4,10 +4,12 @@ import { db } from "@/db"; // your drizzle instance
 import { nextCookies } from "better-auth/next-js";
 import { admin as adminPlugin } from "better-auth/plugins";
 import { admin, guru, walimurid, ac } from "./permissions";
+import * as schema from "@/db/schema/schema";
 
 export const auth = betterAuth({
   database: drizzleAdapter(db, {
-    provider: "pg", // or "mysql", "sqlite"
+    provider: "pg",
+    schema,
   }),
   emailAndPassword: {
     enabled: true,
