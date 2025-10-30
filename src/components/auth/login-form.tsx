@@ -29,6 +29,7 @@ import { Input } from "@/components/ui/input";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
 import { z } from "zod";
+import Link from "next/link";
 
 const formSchema = z.object({
   email: z.email("Email tidak valid").min(1, "Email wajib diisi"),
@@ -119,7 +120,8 @@ export function LoginForm({
                 <Field>
                   <Button type="submit">Login</Button>
                   <FieldDescription className="text-center">
-                    Don&apos;t have an account? <a href="/signup">Sign up</a>
+                    Don&apos;t have an account?{" "}
+                    <Link href="/signup">Sign up</Link>
                   </FieldDescription>
                 </Field>
               </FieldGroup>
