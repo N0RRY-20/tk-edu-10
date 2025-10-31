@@ -11,6 +11,11 @@ export const auth = betterAuth({
     provider: "pg",
     schema,
   }),
+  trustedOrigins: [
+    "http://localhost:3000",
+    "https://tk-edu-10.vercel.app",
+    "*.vercel.app",
+  ],
   emailAndPassword: {
     enabled: true,
   },
