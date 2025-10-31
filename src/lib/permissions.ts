@@ -13,7 +13,7 @@ export const ac = createAccessControl(statement);
 
 export const admin = ac.newRole({
   ...adminAc.statements,
-  user: ["create", "list"],
+  user: ["create", "list", "delete"],
 });
 export const guru = ac.newRole({
   user: ["create", "update"],

@@ -10,7 +10,7 @@ import {
 } from "@/components/ui/table";
 import { Skeleton } from "@/components/ui/skeleton";
 
-export function DataTableSkeleton({ columns = 5, rows = 8 }) {
+export default function Loading({ columns = 5, rows = 8 }) {
   return (
     <div className="overflow-hidden rounded-md border">
       <Table>

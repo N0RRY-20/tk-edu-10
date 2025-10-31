@@ -49,3 +49,28 @@ export const canListUsers = async () => {
   }
   return data?.success;
 };
+
+type Role = "admin" | "guru" | "walimurid";
+export const CreateUser = async (
+  role: Role,
+  email: string,
+  password: string,
+  name: string
+) => {
+  try {
+    const { data: newUser, error } = await authClient.admin.createUser({
+      email, // required
+      password, // required
+      name, // required
+      role,
+      // data: { customField: "customValue" },
+    });
+    if (error) {
+      throw new Error(error.message);
+    }
+    return newUser.user;
+  } catch (error) {
+    const err = error as Error;
+    throw new Error(err.message);
+  }
+};
