@@ -5,16 +5,9 @@ import { Button } from "@/components/ui/button";
 import { ColumnDef } from "@tanstack/react-table";
 
 import { UserWithRole } from "better-auth/plugins";
-import { ArrowUpDown, MoreHorizontal } from "lucide-react";
-import {
-  DropdownMenu,
-  DropdownMenuContent,
-  DropdownMenuItem,
-  DropdownMenuLabel,
-  DropdownMenuSeparator,
-  DropdownMenuTrigger,
-} from "@/components/ui/dropdown-menu";
-import { authClient } from "@/lib/auth-client";
+import { ArrowUpDown } from "lucide-react";
+
+import UserActions from "./userAction";
 
 // This type is used to define the shape of our data.
 // You can use a Zod schema here if you want.
@@ -61,53 +54,8 @@ export const columns: ColumnDef<UserWithRole>[] = [
   {
     id: "actions",
     cell: ({ row }) => {
-      const payment = row.original;
-
-      return (
-        <DropdownMenu>
-          <DropdownMenuTrigger asChild>
-            <Button variant="ghost" className="h-8 w-8 p-0">
-              <span className="sr-only">Open menu</span>
-              <MoreHorizontal className="h-4 w-4" />
-            </Button>
-          </DropdownMenuTrigger>
-          <DropdownMenuContent align="end">
-            <DropdownMenuLabel>Actions</DropdownMenuLabel>
-            <DropdownMenuItem
-              onClick={() => navigator.clipboard.writeText(payment.id)}
-            >
-              Copy payment ID
-            </DropdownMenuItem>
-            <DropdownMenuSeparator />
-            <DropdownMenuItem>Edit</DropdownMenuItem>
-            <DropdownMenuItem
-              onClick={async () => {
-                // Dapatkan user saat ini
-                const currentUser = await authClient.getSession();
-
-                if (currentUser?.data?.user?.id === payment.id) {
-                  console.error("Tidak dapat menghapus diri sendiri");
-                  return;
-                }
-
-                const { data: deletedUser, error } =
-                  await authClient.admin.removeUser({
-                    userId: payment.id,
-                  });
-
-                if (error) {
-                  console.error("Failed to delete user:", error);
-                } else {
-                  console.log("User deleted:", deletedUser);
-                  // Refresh data atau update UI
-                }
-              }}
-            >
-              Delete
-            </DropdownMenuItem>
-          </DropdownMenuContent>
-        </DropdownMenu>
-      );
+      const users = row.original;
+      return <UserActions userId={users.id} userName={users.name} />;
     },
   },
 ];
