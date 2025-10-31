@@ -6,14 +6,14 @@ import { defaultStatements, adminAc } from "better-auth/plugins/admin/access";
  */
 const statement = {
   ...defaultStatements,
-  user: ["create", "share", "update", "delete"],
+  user: ["create", "share", "update", "delete", "list"],
 } as const;
 
 export const ac = createAccessControl(statement);
 
 export const admin = ac.newRole({
   ...adminAc.statements,
-  user: ["create"],
+  user: ["create", "list"],
 });
 export const guru = ac.newRole({
   user: ["create", "update"],

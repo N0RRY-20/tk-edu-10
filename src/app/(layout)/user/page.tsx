@@ -1,25 +1,18 @@
-import { columns, Payment } from "./partials/columns";
+import { canListUsers, listUsers } from "../../../../server/users";
 import { DataTable } from "./partials/data-table";
+import { columns } from "./partials/columns";
+import NotFoundPage from "@/components/404";
 
-async function getData(): Promise<Payment[]> {
-  // Fetch data from your API here.
-  return [
-    {
-      id: "728ed52f",
-      amount: 100,
-      status: "pending",
-      email: "m@example.com",
-    },
-    // ...
-  ];
-}
-
-export default async function UserPage() {
-  const data = await getData();
+export default async function ListUserPage() {
+  const response = await listUsers();
+  const hasPermission = await canListUsers();
+  if (!hasPermission) {
+    return <NotFoundPage />;
+  }
 
   return (
     <div className="container mx-auto py-10">
-      <DataTable columns={columns} data={data} />
+      <DataTable columns={columns} data={response.users} />
     </div>
   );
 }
