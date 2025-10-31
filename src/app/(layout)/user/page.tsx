@@ -1,3 +1,5 @@
+export const dynamic = 'force-dynamic';
+
 import { canListUsers, listUsers } from "../../../../server/users";
 import { DataTable } from "./partials/data-table";
 import { columns } from "./partials/columns";
