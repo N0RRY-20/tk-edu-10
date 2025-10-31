@@ -34,7 +34,7 @@ import { School } from "lucide-react";
 
 const data = {
   user: {
-    name: "shadcn",
+    name: "shadc",
     email: "m@example.com",
     avatar: "/avatars/shadcn.jpg",
   },

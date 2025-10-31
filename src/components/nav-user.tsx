@@ -42,6 +42,12 @@ export function NavUser({
   const { isMobile } = useSidebar();
   const router = useRouter();
   const [isLoading, setIsLoading] = useState(false);
+  const { data: session } = authClient.useSession();
+
+  if (!session?.user) {
+    return null;
+  }
+
   return (
     <SidebarMenu>
       <SidebarMenuItem>
@@ -56,9 +62,11 @@ export function NavUser({
                 <AvatarFallback className="rounded-lg">CN</AvatarFallback>
               </Avatar>
               <div className="grid flex-1 text-left text-sm leading-tight">
-                <span className="truncate font-medium">{user.name}</span>
+                <span className="truncate font-medium">
+                  {session?.user.name}
+                </span>
                 <span className="text-muted-foreground truncate text-xs">
-                  {user.email}
+                  {session?.user.email}
                 </span>
               </div>
               <IconDotsVertical className="ml-auto size-4" />
