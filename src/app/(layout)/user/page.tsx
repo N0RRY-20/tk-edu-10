@@ -1,21 +1,37 @@
-export const dynamic = 'force-dynamic';
+export const dynamic = "force-dynamic";
 
-import { canListUsers, listUsers } from "../../../../server/users";
+import { authClient } from "@/lib/auth-client";
 import { DataTable } from "./partials/data-table";
 import { columns } from "./partials/columns";
-import NotFoundPage from "@/components/404";
-import { CreateUserDialog } from "./partials/create-user-dialog";
+import { headers } from "next/headers";
+import { UserWithRole } from "better-auth/plugins";
 
 export default async function ListUserPage() {
-  const response = await listUsers();
-  const hasPermission = await canListUsers();
-  if (!hasPermission) {
-    return <NotFoundPage />;
+  let users: UserWithRole[] = [];
+
+  try {
+    const requestHeaders = await headers(); // ❌ tidak pakai await
+
+    const response = await authClient.admin.listUsers({
+      query: {
+        limit: 100,
+        offset: 0,
+        sortBy: "name",
+        sortDirection: "desc",
+      },
+      fetchOptions: {
+        headers: requestHeaders, // ✅ kirim headers
+      },
+    });
+
+    users = response.data?.users ?? []; // ✅ simpan hasilnya
+  } catch (error) {
+    console.error(error);
   }
-  console.log(response.users);
+
   return (
     <div className="container mx-auto py-10" suppressHydrationWarning>
-      <DataTable columns={columns} data={response.users} />
+      <DataTable columns={columns} data={users ?? []} />
     </div>
   );
 }
